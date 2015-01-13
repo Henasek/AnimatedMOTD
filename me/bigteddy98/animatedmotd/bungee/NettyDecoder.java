@@ -63,7 +63,6 @@ public class NettyDecoder extends MessageToMessageDecoder<PacketWrapper> {
 		}
 		task = ProxyServer.getInstance().getScheduler().schedule(this.plugin, new Runnable() {
 
-			@Override
 			public void run() {
 				if (!isPing) {
 					task.cancel();
@@ -134,15 +133,15 @@ public class NettyDecoder extends MessageToMessageDecoder<PacketWrapper> {
 				this.isPing = true;
 				ProxyServer.getInstance().getScheduler().schedule(this.plugin, new Runnable() {
 
-					@Override
 					public void run() {
 						// respond with a response packet
-						ctx.pipeline().writeAndFlush((new StatusResponse(buildResponseJSON())));
+						ctx.pipeline().writeAndFlush((new StatusResponse(buildResponseJSON(data))));
 					}
 				}, data.getSleepMillis(), TimeUnit.MILLISECONDS);
 			}
 		} else if (packet.packet instanceof StatusRequest) {
-			ctx.pipeline().writeAndFlush(new StatusResponse(buildResponseJSON()));
+			final ServerData data = this.statusListener.update();
+			ctx.pipeline().writeAndFlush(new StatusResponse(buildResponseJSON(data)));
 		} else {
 			out.add(packet);
 		}
@@ -156,8 +155,8 @@ public class NettyDecoder extends MessageToMessageDecoder<PacketWrapper> {
 		return -1;
 	}
 
-	private String buildResponseJSON() {
-		final ServerData data = this.statusListener.update();
+	private String buildResponseJSON(ServerData d) {
+		final ServerData data = d;
 
 		// respond with a response packet
 		JsonObject version = new JsonObject();
