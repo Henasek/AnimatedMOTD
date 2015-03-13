@@ -25,6 +25,7 @@ import net.md_5.bungee.api.ChatColor;
 public class DefaultPingManager implements StatusListener {
 
 	private final Scroller scroller1 = new Scroller(ChatColor.GOLD + "Example MOTD 1 - This is an example", 60, 10, '&');
+	private final Scroller scroller1 = new Scroller(ChatColor.RED + "Example MOTD 1 - This is an example", 60, 10, '&');
 	private final Scroller scroller2 = new Scroller(ChatColor.GOLD + "Example MOTD 2 - This is an example", 60, 10, '&');
 
 	@Override
